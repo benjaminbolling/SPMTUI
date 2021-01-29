@@ -1,4 +1,4 @@
-# Simple Project Management TUI.
+# Simple Project Management TUI
 A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed.
 
 # Package history
@@ -35,3 +35,21 @@ Table 1: Implemented commands and their meaning.
 | `clearOutput` | Empty the terminal screen |
 | `exit` | Exit the todoDict session |
 | `help` | A help text |
+
+Different states of the tasks are displayed in different colours as defined in Table 2.
+
+Table 2: Task colours and their associated states.
+| Colour | State |
+| :----------: | :----------: |
+| Yellow | To Do |
+| Cyan | In progress |
+| Green | Done |
+| Unknown | Red |
+
+Each task becomes key with its own associated dictionary as a value. Each task's dictionary consists of a state (a string), a description (a string), and a log (a dictionary). The log consists of timestamps as keys (date and time) and a log entry (string) as value. When the object is created or edited (incl. changing state), a log entry is created. A user can also add log entries manually. Note: Log entries cannot be removed within SPMTUI. However, tasks can be removed.
+
+Any time a change is made, the `.tdDict` file is updated.
+
+# Figures
+![Figure 1](docs/fig01.png)
+Figure 1: The SPMTUI initiated and `showall` command executed.
