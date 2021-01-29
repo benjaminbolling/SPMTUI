@@ -43,33 +43,6 @@ def newLogBook(files):
         return filename+".tdDict"
 
 def runtodo():
-    files = []
-    for file in [f for f in os.listdir('.') if os.path.isfile(f)]:
-        if file.endswith(".tdDict"):
-            files.append(file)
-
-    newOrLoad = str(prompt('Create New or Load a file? [load/new] >> ', completer=WordCompleter(['load','new'])))
-
-    if newOrLoad == 'load':
-        if len(files) == 1:
-            filename = files[0]
-        elif len(files) > 1:
-            validName = 0
-            while validName == 0:
-                filename = str(prompt('Select a file: (use tab completion to see options) >> ', completer=WordCompleter(files)))
-                if filename in files:
-                    validName = 1
-        else:
-            print('No tdDict files found. Creating new.')
-            newOrLoad = 'new'
-
-    if newOrLoad == 'new':
-        filename = newLogBook(files)
-        savefn(filename,{})
-
-    with open(filename, 'r') as in_file:
-        dict = load(in_file)
-
     system('clear')
 
     print(' ')
@@ -79,8 +52,36 @@ def runtodo():
     print(    f"{tc.green}     Email: benjaminbolling@icloud.com{tc.tcend}")
     print(   f"{tc.blue} ======================================== {tc.tcend}")
 
-    command(filename,dict,1)
+    files = []
+    for file in [f for f in os.listdir('.') if os.path.isfile(f)]:
+        if file.endswith(".tdDict"):
+            files.append(file)
 
+    newOrLoad = str(prompt('Create New or Load a file? [load/new] >> ', completer=WordCompleter(['load','new'])))
+    if newOrLoad == 'load' or newOrLoad == 'new':
+        if newOrLoad == 'load':
+            if len(files) == 1:
+                filename = files[0]
+            elif len(files) > 1:
+                validName = 0
+                while validName == 0:
+                    filename = str(prompt('Select a file: (use tab completion to see options) >> ', completer=WordCompleter(files)))
+                    if filename in files:
+                        validName = 1
+            else:
+                print('No tdDict files found. Creating new.')
+                newOrLoad = 'new'
+
+        if newOrLoad == 'new':
+            filename = newLogBook(files)
+            savefn(filename,{})
+
+        with open(filename, 'r') as in_file:
+            dict = load(in_file)
+
+        command(filename,dict,1)
+    else:
+        print('Invalid command. Exiting.')
 
 def command(filename,dict,showCommands):
     commands = {'showall':'      Show all tasks',
@@ -211,6 +212,7 @@ def editItem(dict):
         newdescription = input('New description for '+itemName+': >> ')
         if input('Confirm new description for '+itemName+': [y/N] >>') == 'y':
             dict[itemName]['description'] = newdescription
+            dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'Description of item edited.'
     else:
         print(f"    {tc.error}Error: Could not find item with name ["+itemName+"] !"+f"{tc.tcend}")
     return dict
