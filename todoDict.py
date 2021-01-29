@@ -5,11 +5,13 @@ from os import system
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from copy import deepcopy
+from datetime import datetime
+import os
 
 class tc:
     # text color
     magenta = '\033[95m'
-    blue = '\033[94m'
+    blue = '\033[90m'
     cyan = '\033[96m'
     green = '\033[92m'
     yellow = '\033[93m'
@@ -25,29 +27,91 @@ class tc:
     done = green
     error = red
 
-filename = 'dict01.data'
+def newLogBook(files):
+    accepted = 0
+    while accepted == 0:
+        filename = str(input('Define name of new to-do list: >> '))
+        if filename in files:
+            if str(input('Logbook already exists. Overwrite? Warning: This action is irreversible. [y/N] >> ')) == 'y':
+                os.remove(filename)
+                accepted = 1
+        else:
+            accepted = 1
+    if filename.endswith(".tdDict"):
+        return filename
+    else:
+        return filename+".tdDict"
 
-with open(filename, 'r') as in_file:
-    dict = load(in_file)
+def runtodo():
+    files = []
+    for file in [f for f in os.listdir('.') if os.path.isfile(f)]:
+        if file.endswith(".tdDict"):
+            files.append(file)
 
-system('clear')
+    newOrLoad = str(prompt('Create New or Load a file? [load/new] >> ', completer=WordCompleter(['load','new'])))
 
-def command(filename,dict):
-    commands = ['add','showall','showitem','showtodo','showongoing','showdone','markastodo','markasongoing','markasdone','edit','rmv','clearOutput','exit']
-    commandsStr = ''
-    for c in commands:
-        commandsStr = commandsStr + '['+c+'] '
+    if newOrLoad == 'load':
+        if len(files) == 1:
+            filename = files[0]
+        elif len(files) > 1:
+            validName = 0
+            while validName == 0:
+                filename = str(prompt('Select a file: (use tab completion to see options) >> ', completer=WordCompleter(files)))
+                if filename in files:
+                    validName = 1
+        else:
+            print('No tdDict files found. Creating new.')
+            newOrLoad = 'new'
+
+    if newOrLoad == 'new':
+        filename = newLogBook(files)
+        savefn(filename,{})
+
+    with open(filename, 'r') as in_file:
+        dict = load(in_file)
+
+    system('clear')
+
     print(' ')
-    print('Possible commands are in brackets: '+commandsStr)
+    print(   f"{tc.blue} ======================================== {tc.tcend}")
+    print(f"{tc.magenta}          todoDict python script{tc.tcend}")
+    print(    f"{tc.red}  Created 2021-01-28 by Benjamin Bolling{tc.tcend}")
+    print(    f"{tc.green}     Email: benjaminbolling@icloud.com{tc.tcend}")
+    print(   f"{tc.blue} ======================================== {tc.tcend}")
+
+    command(filename,dict,1)
+
+
+def command(filename,dict,showCommands):
+    commands = {'showall':'      Show all tasks',
+                'addItem':'      Add a new task',
+                'addLog':'       Add a log entry to a task',
+                'editItem':'     Edit the description of a task',
+                'rmvItem':'      Remove an task',
+                'markastodo':'   Change state of a task to "To Do"',
+                'markasongoing':'Change state of a task to "Ongoing"',
+                'markasdone':'   Change state of a task to "Done"',
+                'showitem':'     Show detailed information about a task',
+                'showtodo':'     Show all tasks to do',
+                'showongoing':'  Show all tasks that are ongoing',
+                'showdone':'     Show all tasks that are done',
+                'clearOutput':'  Empty the terminal screen',
+                'exit':'         Exit the todoDict session',
+                'help':'         This help text'}
+
+    if showCommands == 1:
+        showHelp(commands)
     print(' ')
 
-    todo = str(prompt('What to do? >> ', completer=WordCompleter(commands)))
+    todo = str(prompt('What to do? >> ', completer=WordCompleter(list(commands.keys()))))
 
-    if todo == 'add':
+    if todo == 'addItem':
         dict = addItem(deepcopy(dict))
-    elif todo == 'edit':
+    elif todo == 'addLog':
+        dict = addLog(deepcopy(dict))
+    elif todo == 'editItem':
         dict = editItem(deepcopy(dict))
-    elif todo == 'rmv':
+    elif todo == 'rmvItem':
         dict = rmvItem(deepcopy(dict))
 
     elif todo == 'showall':
@@ -68,6 +132,8 @@ def command(filename,dict):
     elif todo == 'markastodo':
         dict = markItemAsTodo(deepcopy(dict))
 
+    elif todo == 'help':
+        showHelp(commands)
     elif todo == 'clearOutput':
         system('clear')
     elif todo != 'exit':
@@ -78,10 +144,17 @@ def command(filename,dict):
         print('Exiting todoDict.py.')
         print(' ')
     else:
-        if todo in ['add','markastodo','markasongoing','markasdone','edit','rmv']:
+        if todo in ['addItem','addLog','markastodo','markasongoing','markasdone','editItem','rmvItem']:
             savefn(filename,dict)
         print(' ')
-        command(filename,dict)
+        command(filename,dict,0)
+
+def showHelp(commands):
+    print(' ')
+    print('Possible commands are: ')
+    for key in list(commands.keys()):
+        print('[ '+str(key)+' ]    '+str(commands[key]))
+    print(' ')
 
 def getNewItemName(dict):
     itemName = str(input('Define new task: >> '))
@@ -105,9 +178,31 @@ def addItem(dict):
     itemDescription = input('Write a description of the task: >> ')
     itemState = 'todo'
     dict[itemName] = {'state':itemState,'description':itemDescription}
+    dict[itemName]['log'] = {}
+    dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'Item created.'
+    return dict
+
+def addLog(dict):
+    showAll(dict)
+    print(' ')
+    print(' =================================== ')
+    print(' ')
+    itemName = str(prompt('Insert the name of the item to insert a log entry to: >> ', completer=WordCompleter(list(dict.keys()))))
+    if itemName in list(dict.keys()):
+        logs = dict[itemName]['log']
+        for logentry in list(logs.keys()):
+            print(str(logentry)+' : '+str(logs[logentry]))
+        newLogEntry = input('Log entry for '+itemName+': >> ')
+        dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = newLogEntry
+    else:
+        print(f"    {tc.error}Error: Could not find item with name ["+itemName+"] !"+f"{tc.tcend}")
     return dict
 
 def editItem(dict):
+    showAll(dict)
+    print(' ')
+    print(' =================================== ')
+    print(' ')
     itemName = str(prompt('Insert the name of the item which is to be edited: >> ', completer=WordCompleter(list(dict.keys()))))
     if itemName in list(dict.keys()):
         print('Current description:')
@@ -116,9 +211,15 @@ def editItem(dict):
         newdescription = input('New description for '+itemName+': >> ')
         if input('Confirm new description for '+itemName+': [y/N] >>') == 'y':
             dict[itemName]['description'] = newdescription
+    else:
+        print(f"    {tc.error}Error: Could not find item with name ["+itemName+"] !"+f"{tc.tcend}")
     return dict
 
 def rmvItem(dict):
+    showAll(dict)
+    print(' ')
+    print(' =================================== ')
+    print(' ')
     if input('Warning: This process is irreversible. Continue? [y/N] >> ') == 'y':
         itemName = str(prompt('Insert the name of the item which is to be removed: >> ', completer=WordCompleter(list(dict.keys()))))
         if itemName in list(dict.keys()):
@@ -126,7 +227,7 @@ def rmvItem(dict):
                 del dict[itemName]
                 print(itemName+' deleted.')
         else:
-            print(itemName+' not found.')
+            print(f"    {tc.error}Error: Could not find item with name ["+itemName+"] !"+f"{tc.tcend}")
     return dict
 
 def showItem(dict):
@@ -154,13 +255,26 @@ def showItem(dict):
         for row in description.split('\\n'):
             if len(row) > 0:
                 print(row)
+        print(' ')
+        print(' =================================== ')
+        print(' ')
+        print('Logs:')
+        print(' ')
+        logs = dict[key]['log']
+        for logentry in list(logs.keys()):
+            print(str(logentry)+' : '+str(logs[logentry]))
+        print(' ')
+        print(' =================================== ')
+        print(' ')
     else:
-        print(f"{tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
+        print(f"    {tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
     print(' ')
 
 def showAll(dict):
     print(' ')
-    print('All items: '+f"{tc.done} [Done]{tc.ongoing} [In progress]{tc.todo} [To do]{tc.error} [Undefined state]{tc.tcend}")
+    print(' =========================================================== ')
+    print('  All items:'+f"{tc.done} [Done]{tc.ongoing} [In progress]{tc.todo} [To do]{tc.error} [Undefined state]{tc.tcend}")
+    print(' =========================================================== ')
     showOngoing(dict)
     showTodo(dict)
     showDone(dict)
@@ -172,31 +286,34 @@ def showUnknowns(dict):
     print('Items in an unknown state:')
     for key in list(dict.keys()):
         if dict[key]['state'] not in ['done','todo','ongoing']:
-            print(f"{tc.error}"+key+"     [Error: State could not be read.] "+f"{tc.tcend}")
+            print(f"    {tc.error}"+key+"     [Error: State could not be read.] "+f"{tc.tcend}")
             print(' ')
 
 def showDone(dict):
     print(' ')
     print('Items done:')
+    sorteddict = {i:dict[i] for i in sorted(dict.keys())}
     for key in list(dict.keys()):
         if dict[key]['state'] == 'done':
-            print(f"{tc.done}"+key+f"{tc.tcend}")
+            print(f"    {tc.done}"+key+f"{tc.tcend}")
             print(' ')
 
 def showTodo(dict):
     print(' ')
     print('Items to do:')
+    sorteddict = {i:dict[i] for i in sorted(dict.keys())}
     for key in list(dict.keys()):
         if dict[key]['state'] == 'todo':
-            print(f"{tc.todo}"+key+f"{tc.tcend}")
+            print(f"    {tc.todo}"+key+f"{tc.tcend}")
             print(' ')
 
 def showOngoing(dict):
     print(' ')
     print('Items in progress:')
+    sorteddict = {i:dict[i] for i in sorted(dict.keys())}
     for key in list(dict.keys()):
         if dict[key]['state'] == 'ongoing':
-            print(f"{tc.ongoing}"+key+f"{tc.tcend}")
+            print(f"    {tc.ongoing}"+key+f"{tc.tcend}")
             print(' ')
 
 def markItemAsDone(dict):
@@ -211,7 +328,7 @@ def markItemAsDone(dict):
         dict[key]['state'] = 'done'
         print(key+' is now marked as done. Previous state was '+prevstate+'.')
     else:
-        print(f"{tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
+        print(f"    {tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
     return dict
 
 def markItemAsOngoing(dict):
@@ -226,7 +343,7 @@ def markItemAsOngoing(dict):
         dict[key]['state'] = 'ongoing'
         print(key+' is now marked as done. Previous state was '+prevstate+'.')
     else:
-        print(f"{tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
+        print(f"    {tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
     return dict
 
 def markItemAsTodo(dict):
@@ -241,11 +358,11 @@ def markItemAsTodo(dict):
         dict[key]['state'] = 'todo'
         print(key+' is now marked as todo. Previous state was '+prevstate+'.')
     else:
-        print(f"{tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
+        print(f"    {tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
     return dict
 
 def savefn(filename,dict):
     with open(filename, 'w') as out_file:
         dump(dict, out_file)
 
-command(filename,dict)
+runtodo()
