@@ -15,8 +15,8 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from copy import deepcopy
 
-from IO import *
-import tc
+from data.IO import *
+import data.tc as tc
 
 def runtodo():
     system('clear')
@@ -131,5 +131,3 @@ def command(filename,dict,showCommands):
 def savefn(filename,dict):
     with open(filename, 'w') as out_file:
         dump(dict, out_file)
-
-runtodo()

@@ -14,7 +14,7 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from datetime import datetime
 
-import tc
+import data.tc as tc
 
 def newLogBook(files):
     accepted = 0
