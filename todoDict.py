@@ -131,6 +131,9 @@ def rmvItem(dict):
 
 def showItem(dict):
     showAll(dict)
+    print(' ')
+    print(' =================================== ')
+    print(' ')
     key = prompt('Insert the name of the item to show: >> ', completer=WordCompleter(list(dict.keys())))
     if key in list(dict.keys()):
         state = str(dict[key]['state'])
