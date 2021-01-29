@@ -15,7 +15,8 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from copy import deepcopy
 
-import IO, tc
+from IO import *
+import tc
 
 def runtodo():
     system('clear')
@@ -56,7 +57,7 @@ def runtodo():
             dict = load(in_file)
 
         command(filename,dict,1)
-        
+
     elif newOrLoad != 'quit':
         print('Invalid command. Exiting.')
 
