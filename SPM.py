@@ -1,12 +1,17 @@
-# To Do Dicts
-# 2021 Benjamin Bolling, European Spallation Source ERIC
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Simple Project Management                                                   #
+# A tool for logging and keeping track of things to do.                       #
+# =========================================================================== #
+# Author: Benjamin Bolling                                                    #
+# Creation: 2021-01-29                                                        #
+# Author email: benjaminbolling@icloud.com                                    #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 from json import dump, load
-from os import system
+from os import system, remove, listdir, path
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 from copy import deepcopy
 from datetime import datetime
-import os
 
 class tc:
     # text color
@@ -33,7 +38,7 @@ def newLogBook(files):
         filename = str(input('Define name of new to-do list: >> '))
         if filename in files:
             if str(input('Logbook already exists. Overwrite? Warning: This action is irreversible. [y/N] >> ')) == 'y':
-                os.remove(filename)
+                remove(filename)
                 accepted = 1
         else:
             accepted = 1
@@ -53,7 +58,7 @@ def runtodo():
     print(   f"{tc.blue} ======================================== {tc.tcend}")
 
     files = []
-    for file in [f for f in os.listdir('.') if os.path.isfile(f)]:
+    for file in [f for f in listdir('.') if path.isfile(f)]:
         if file.endswith(".tdDict"):
             files.append(file)
 
@@ -74,7 +79,8 @@ def runtodo():
 
         if newOrLoad == 'new':
             filename = newLogBook(files)
-            savefn(filename,{})
+            dict = addItem({})
+            savefn(filename,dict)
 
         with open(filename, 'r') as in_file:
             dict = load(in_file)
@@ -329,6 +335,7 @@ def markItemAsDone(dict):
         prevstate = str(dict[key]['state'])
         dict[key]['state'] = 'done'
         print(key+' is now marked as done. Previous state was '+prevstate+'.')
+        dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to done.'
     else:
         print(f"    {tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tcend}")
     return dict
