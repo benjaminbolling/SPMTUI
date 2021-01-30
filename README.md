@@ -1,7 +1,12 @@
 # Simple Project Management TUI
-A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed.
 
 ![Figure 0](docs/fig00.png)
+
+A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed. features include:
+- Commands with tab-completion
+- Colour-coded states of each task
+- Description of each task
+- Logbook tracking of task initiation and changes (both manual and automatic entries)
 
 ## Package history
 Original author is Benjamin Bolling, https://orcid.org/0000-0002-6650-5365.
