@@ -46,9 +46,7 @@ Table 2: Task colours and their associated states.
 | Green | Done |
 | Unknown | Red |
 
-Each task becomes key with its own associated dictionary as a value. Each task's dictionary consists of a state (a string), a description (a string), and a log (a dictionary). The log consists of timestamps as keys (date and time) and a log entry (string) as value. When the object is created or edited (incl. changing state), a log entry is created. A user can also add log entries manually. Note: Log entries cannot be removed within SPMTUI. However, tasks can be removed.
-
-Any time a change is made, the `.tdDict` file is updated.
+Each task becomes key with its own associated dictionary as a value. Each task's dictionary consists of a state (a string), a description (a string), and a log (a dictionary). The log consists of timestamps as keys (date and time) and a log entry (string) as value. When the object is created or edited (incl. changing state), a log entry is created. A user can also add log entries manually, but log entries cannot be removed. Any time a change is made, the `.tdDict` file is updated.
 
 # Figures
 ![Figure 1](docs/fig01.png)

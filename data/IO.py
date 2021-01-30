@@ -86,7 +86,7 @@ def editItem(dict):
         newdescription = input('New description for '+itemName+': >> ')
         if input('Confirm new description for '+itemName+': [y/N] >>') == 'y':
             dict[itemName]['description'] = newdescription
-            dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'Description of item edited.'
+            dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'Description edited.'
     else:
         print(f"    {tc.tc.error}Error: Could not find item with name ["+itemName+"] !"+f"{tc.tc.tcend}")
     return dict
