@@ -23,10 +23,11 @@ def runtodo():
 
     print(' ')
     print(   f"{tc.tc.blue} ======================================== {tc.tc.tcend}")
-    print(f"{tc.tc.magenta}          todoDict python script{tc.tc.tcend}")
+    print(f"{tc.tc.magenta}           SPMTUI python script{tc.tc.tcend}")
     print(f"{tc.tc.magenta}      Simple Project Management tool{tc.tc.tcend}")
     print(    f"{tc.tc.red}  Created 2021-01-28 by Benjamin Bolling{tc.tc.tcend}")
-    print(    f"{tc.tc.green}     Email: benjaminbolling@icloud.com{tc.tc.tcend}")
+    print(    f"{tc.tc.green}   Email: benjaminbolling@icloud.com{tc.tc.tcend}")
+    print(   f"{tc.tc.yellow}      ORCID: 0000-0002-6650-5365{tc.tc.tcend}")
     print(   f"{tc.tc.blue} ======================================== {tc.tc.tcend}")
 
     files = []
@@ -75,7 +76,7 @@ def command(filename,dict,showCommands):
                 'showongoing':'  Show all tasks that are ongoing',
                 'showdone':'     Show all tasks that are done',
                 'clearOutput':'  Empty the terminal screen',
-                'exit':'         Exit the todoDict session',
+                'quit':'         Exit the todoDict session',
                 'help':'         This help text'}
 
     if showCommands == 1:
@@ -115,10 +116,10 @@ def command(filename,dict,showCommands):
         showHelp(commands)
     elif todo == 'clearOutput':
         system('clear')
-    elif todo != 'exit':
+    elif todo != 'quit':
         print('Command ['+todo+'] not defined. Try again.')
 
-    if todo == 'exit':
+    if todo == 'quit':
         print(' ')
         print('Exiting todoDict.py.')
         print(' ')

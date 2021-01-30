@@ -32,7 +32,7 @@ Table 1: Implemented commands and their meaning.
 | `showongoing` | Show all tasks that are ongoing |
 | `showdone` | Show all tasks that are done |
 | `clearOutput` | Empty the terminal screen |
-| `exit` | Exit the todoDict session |
+| `quit` | Exit the todoDict session |
 | `help` | A help text |
 
 Different states of the tasks are displayed in different colours as defined in Table 2.
