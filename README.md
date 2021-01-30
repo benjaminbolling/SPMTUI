@@ -2,7 +2,7 @@
 A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed.
 
 ## Package history
-Original author is Benjamin Bolling, (ORCID iD 0000-0002-6650-5365)[https://orcid.org/0000-0002-6650-5365].
+Original author is Benjamin Bolling, https://orcid.org/0000-0002-6650-5365.
 
 Package development began 2021-01-28, version 1 finished 2021-01-30.
 
