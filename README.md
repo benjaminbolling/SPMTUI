@@ -2,7 +2,7 @@
 
 ![Figure 0](docs/fig00.png)
 
-A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed. features include:
+A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed. The TUI includes:
 - Commands with tab-completion
 - Colour-coded states of each task
 - Description of each task
