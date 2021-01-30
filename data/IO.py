@@ -117,7 +117,7 @@ def markItemAsDone(dict):
         prevstate = str(dict[key]['state'])
         dict[key]['state'] = 'done'
         print(key+' is now marked as done. Previous state was '+prevstate+'.')
-        dict[itemName]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to done.'
+        dict[key]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to Done.'
     else:
         print(f"    {tc.tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tc.tcend}")
     return dict
@@ -132,7 +132,8 @@ def markItemAsOngoing(dict):
     if key in list(dict.keys()):
         prevstate = str(dict[key]['state'])
         dict[key]['state'] = 'ongoing'
-        print(key+' is now marked as done. Previous state was '+prevstate+'.')
+        print(key+' is now marked as in progress. Previous state was '+prevstate+'.')
+        dict[key]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to In Progress.'
     else:
         print(f"    {tc.tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tc.tcend}")
     return dict
@@ -148,6 +149,7 @@ def markItemAsTodo(dict):
         prevstate = str(dict[key]['state'])
         dict[key]['state'] = 'todo'
         print(key+' is now marked as todo. Previous state was '+prevstate+'.')
+        dict[key]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to To-Do..'
     else:
         print(f"    {tc.tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tc.tcend}")
     return dict
