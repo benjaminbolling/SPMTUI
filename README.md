@@ -1,6 +1,8 @@
 # Simple Project Management TUI
 A simple TUI (text-based user interface) for logging and keeping track of things and projects to do, in progress, and completed.
 
+![Figure 0](docs/fig00.png)
+
 ## Package history
 Original author is Benjamin Bolling, https://orcid.org/0000-0002-6650-5365.
 
