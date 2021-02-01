@@ -18,6 +18,7 @@ class tc: # text color
     yellow = '\033[93m'
     red = '\033[91m'
 
+
     bold = '\033[1m'
     underline = '\033[4m'
 
@@ -27,3 +28,4 @@ class tc: # text color
     ongoing = cyan
     done = green
     error = red
+    cancelled = magenta

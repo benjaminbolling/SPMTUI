@@ -122,6 +122,22 @@ def markItemAsDone(dict):
         print(f"    {tc.tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tc.tcend}")
     return dict
 
+def markItemAsCancelled(dict):
+    showTodo(dict)
+    showOngoing(dict)
+    showUnknowns(dict)
+    print(' ')
+    print(' ')
+    key = str(prompt('Insert the name of the item which is cancelled: >> ', completer=WordCompleter(list(dict.keys()))))
+    if key in list(dict.keys()):
+        prevstate = str(dict[key]['state'])
+        dict[key]['state'] = 'cancelled'
+        print(key+' is now marked as cancelled. Previous state was '+prevstate+'.')
+        dict[key]['log'][str(datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))] = 'State changed from '+prevstate+' to Cancelled.'
+    else:
+        print(f"    {tc.tc.error}Error: Could not find item with name ["+key+"] !"+f"{tc.tc.tcend}")
+    return dict
+
 def markItemAsOngoing(dict):
     showTodo(dict)
     showDone(dict)
@@ -179,6 +195,8 @@ def showItem(dict):
             print(output+f"{tc.tc.ongoing}Ongoing.{tc.tc.tcend}")
         elif state == 'done':
             print(output+f"{tc.tc.done}Done.{tc.tc.tcend}")
+        elif state == 'cancelled':
+            print(output+f"{tc.tc.cancelled}Cancelled.{tc.tc.tcend}")
         else:
             print(output+f"{tc.tc.error}Unkown.{tc.tc.tcend}")
         print(' ')
@@ -204,11 +222,12 @@ def showItem(dict):
 def showAll(dict):
     print(' ')
     print(' =========================================================== ')
-    print('  All items:'+f"{tc.tc.done} [Done]{tc.tc.ongoing} [In progress]{tc.tc.todo} [To do]{tc.tc.error} [Undefined state]{tc.tc.tcend}")
+    print('  All items:'+f"{tc.tc.done} [Done]{tc.tc.ongoing} [In progress]{tc.tc.todo} [To do]{tc.tc.cancelled} [Cancelled]{tc.tc.error} [Undefined state]{tc.tc.tcend}")
     print(' =========================================================== ')
     showOngoing(dict)
     showTodo(dict)
     showDone(dict)
+    showCancelled(dict)
     showUnknowns(dict)
     print(' ')
 
@@ -216,8 +235,17 @@ def showUnknowns(dict):
     print(' ')
     print('Items in an unknown state:')
     for key in list(dict.keys()):
-        if dict[key]['state'] not in ['done','todo','ongoing']:
+        if dict[key]['state'] not in ['done','todo','ongoing','cancelled']:
             print(f"    {tc.tc.error}"+key+"     [Error: State could not be read.] "+f"{tc.tc.tcend}")
+            print(' ')
+
+def showCancelled(dict):
+    print(' ')
+    print('Items cancelled:')
+    sorteddict = {i:dict[i] for i in sorted(dict.keys())}
+    for key in list(dict.keys()):
+        if dict[key]['state'] == 'cancelled':
+            print(f"    {tc.tc.cancelled}"+key+f"{tc.tc.tcend}")
             print(' ')
 
 def showDone(dict):

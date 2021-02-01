@@ -63,21 +63,22 @@ def runtodo():
         print('Invalid command. Exiting.')
 
 def command(filename,dict,showCommands):
-    commands = {'showall':'      Show all tasks',
-                'addItem':'      Add a new task',
-                'addLog':'       Add a log entry to a task',
-                'editItem':'     Edit the description of a task',
-                'rmvItem':'      Remove an task',
-                'markastodo':'   Change state of a task to "To Do"',
-                'markasongoing':'Change state of a task to "Ongoing"',
-                'markasdone':'   Change state of a task to "Done"',
-                'showitem':'     Show detailed information about a task',
-                'showtodo':'     Show all tasks to do',
-                'showongoing':'  Show all tasks that are ongoing',
-                'showdone':'     Show all tasks that are done',
-                'clearOutput':'  Empty the terminal screen',
-                'quit':'         Exit the todoDict session',
-                'help':'         This help text'}
+    commands = {'showall':'        Show all tasks',
+                'addItem':'        Add a new task',
+                'addLog':'         Add a log entry to a task',
+                'editItem':'       Edit the description of a task',
+                'rmvItem':'        Remove an task',
+                'markastodo':'     Change state of a task to "To Do"',
+                'markasongoing':'  Change state of a task to "Ongoing"',
+                'markasdone':'     Change state of a task to "Done"',
+                'markascancelled':'Change state of a task to "Cancelled"',
+                'showitem':'       Show detailed information about a task',
+                'showtodo':'       Show all tasks to do',
+                'showongoing':'    Show all tasks that are ongoing',
+                'showdone':'       Show all tasks that are done',
+                'clearOutput':'    Empty the terminal screen',
+                'quit':'           Exit the todoDict session',
+                'help':'           This help text'}
 
     if showCommands == 1:
         showHelp(commands)
@@ -111,6 +112,8 @@ def command(filename,dict,showCommands):
         dict = markItemAsDone(deepcopy(dict))
     elif todo == 'markastodo':
         dict = markItemAsTodo(deepcopy(dict))
+    elif todo == 'markascancelled':
+        dict = markItemAsCancelled(deepcopy(dict))
 
     elif todo == 'help':
         showHelp(commands)
@@ -124,7 +127,7 @@ def command(filename,dict,showCommands):
         print('Exiting todoDict.py.')
         print(' ')
     else:
-        if todo in ['addItem','addLog','markastodo','markasongoing','markasdone','editItem','rmvItem']:
+        if todo in ['addItem','addLog','markastodo','markasongoing','markascancelled','markasdone','editItem','rmvItem']:
             savefn(filename,dict)
         print(' ')
         command(filename,dict,0)
